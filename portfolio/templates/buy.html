@@ -1,0 +1,29 @@
+{% extends 'base_layout.html' %}
+
+{% block content %}
+<br><br>
+<h1>Balance:${{money}}</h1><br><br>
+
+{%if api%}
+	{%if api == "Error..."%}
+		{{api}}
+	{% else %}
+
+	<h1>{{api.companyName}}</h1>
+	<br><br>
+	Price (per share): ${{price}}<br><br>
+	Quatity: {{quantity}}<br><br>
+	Total price: ${{t_price}}<br><br>
+	Balance (after transaction): ${{c_balance}}<br><br>
+	<a id="buy" class="btn btn-dark" type="submit"  href="{% url 'portfolio:buy_share' symbol=api.symbol quantity=quantity %}" role="button" disabled>Buy</a>
+	<a class="btn btn-dark" href="{% url 'portfolio:cancel' symbol=api.symbol %}" role="button">Cancel</a>
+	<script>
+		windows.onload=function(){
+			document.getElementById("buy").disabled=false;
+		}
+	</script>
+
+	{% endif %}
+{% endif %}
+<br><br>><br><br><br>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends 'base_layout.html' %}
+
+{% block content %}
+<br><br>
+<h1>Balance:${{money}}</h1><br><br>
+{%if api%}
+		{%if api == "Error..."%}
+			{{api}}
+		{% else %}
+
+
+		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+		    <script type="text/javascript">
+		       google.charts.load('current', {packages: ['corechart', 'line']});
+		google.charts.setOnLoadCallback(drawBackgroundColor);
+
+		function drawBackgroundColor() {
+		      var data = new google.visualization.arrayToDataTable({{dates_JSON|safe}});
+		    
+		      
+		      var options = {
+		        hAxis: {
+		          title: 'Time'
+		        },
+		        vAxis: {
+		          title: 'Price'
+		        },
+		       
+		      };
+
+		      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+		      chart.draw(data, options);
+		    }
+		    </script>
+
+
+			<h1 class="text-info">{{api.companyName}}</h1><br>
+			Price:${{api.latestPrice}}<br>
+			Previous close:${{api.previousClose}}<br>
+			Market Cap:{{api.marketCap}}<br>
+			YTD Change: {{api.ytdChange}}<br>
+			Week 52 High: {{api.week52High}}<br>
+			Week 52 Low: {{api.week52Low}}<br>
+
+	        <form action="{% url 'graph' ticker=api.symbol %}"  method="POST">
+			{% csrf_token %}
+			<input list="graphs" type="search" placeholder="Enter graph type" aria-label="Search" name='g_type'>
+			<datalist id="graphs">
+				<option value="1">Line Graph</option>
+				<option value="2">Scatter Graph</option>
+				<option value="3">Column Graph</option>
+			</datalist>
+			<input list="scale" type="search" placeholder="Enter the scale" aria-label="Search" name='g_scale'>
+			<datalist id="scale">
+				<option value="1">1 year</option>
+				<option value="2">1 month</option>
+				<option value="3">1 day (by minute)</option>
+				<option value="4">1 day (by hour)</option>
+				<option value="5">20 minutes</option>
+			</datalist>
+			<button class="btn btn-info my-2 my-sm-0" type="submit">Search</button>
+		    </form>
+		    <div id="chart_div" style="width: 900px; height: 500px;"></div>
+		    <a class="btn btn-info" href="{% url 'favourites' symbol=api.symbol %}" role="button">{{b_text}}</a>
+		    <a class="btn btn-info" href="{% url 'portfolio:buy_stocks' symbol=api.symbol %}" role="button">Buy</a>
+		    {% if h == "1" %}
+		    	<a class="btn btn-info" href="{% url 'portfolio:user_holding' symbol=api.symbol %}" role="button">Sell</a>
+		    {% endif %}
+
+		{%endif%}
+{% endif%}
+<br><br><br><br><br><br>
+{% endblock %}

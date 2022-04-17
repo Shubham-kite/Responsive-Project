@@ -1,0 +1,39 @@
+{% extends 'base_layout.html' %}
+
+{% block content %}
+<br><br>
+<h1>Balance:${{money}}</h1><br><br>
+
+{% if b == "0"%}
+<br><br>
+	<h1>No Holdings</h1>
+<br><br>
+{% else %}
+	<br><br>
+	<table class="table table-stripped table-bordered table-hover">
+	  <thead class="thead-dark">
+	    <tr>
+	      <th scope="col">Id</th>
+	      <th scope="col">Company</th>
+	      <th scope="col">Price (per share)</th>
+	      <th scope="col">No. of Shares</th>
+	      <th scope="col">Total Worth</th>
+	      <th scope="col"></th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	  	{% for holding in t%}
+	        <tr>
+		      <th scope="row">{{holding.id}}</th>
+		      <td><a href="{% url 'company_stocks' symbol=holding.symbol%}">{{holding.company}}</a></td>
+		      <td>{{holding.price_per_share}}</td>
+		      <td>{{holding.quantity}}</td>
+		      <td>{{holding.total_price}}</td>
+		      <td><a class="btn btn-info" href="{% url 'portfolio:sell' id=holding.id %}" role="button">Sell</a></td>
+		    </tr>
+		{% endfor %}
+	  </tbody>
+	</table>
+{% endif %}
+<br><br><br><br><br><br>
+{% endblock %}

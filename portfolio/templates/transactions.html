@@ -1,0 +1,40 @@
+{% extends 'base_layout.html' %}
+
+{% block content %}
+<br><br>
+<h1>Balance:${{money}}</h1><br><br>
+
+{% if b == "0"%}
+<br><br><br><br>
+	<h1>No Transactions today</h1>
+	<br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+{% else %}
+	<br><br>
+	<table class="table table-stripped table-bordered table-hover">
+	  <thead class="thead-dark">
+	    <tr>
+	      <th scope="col">Transaction id</th>
+	      <th scope="col">Company</th>
+	      <th scope="col">Bought/Sold</th>
+	      <th scope="col">Price (per share)</th>
+	      <th scope="col">No. of Shares</th>
+	      <th scope="col">Total price</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	  	{% for transaction in t%}
+	        <tr>
+		      <th scope="row">{{transaction.id}}</th>
+		      <td><a href="{% url 'portfolio:user_transaction' id=transaction.id%}">{{transaction.company}}</a></td>
+		      <td>{{transaction.action}}</td>
+		      <td>{{transaction.price_per_share}}</td>
+		      <td>{{transaction.quantity}}</td>
+		      <td>{{transaction.total_price}}</td>
+		    </tr>
+		{% endfor %}
+	  </tbody>
+	</table>
+{% endif %}
+<br><br><br><br><br><br>
+{% endblock %}
